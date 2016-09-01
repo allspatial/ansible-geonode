@@ -50,7 +50,7 @@
   git: repo={{code_repository}} version={{app_name}} dest={{app_code_dir}}/{{app_name}}
 
 - name: ensure manage.py has executable permission
-  file: path={{ app_code_dir}}/{{app_name}}/manage.py mode="u+x"
+  file: path={{app_code_dir}}/{{app_name}}/manage.py mode="u+x"
 
 - name: copy the local_settings.py file in place
   template: src=local_settings.py.j2 dest={{ app_code_dir}}/{{app_name}}/{{ app_name}}/local_settings.py
