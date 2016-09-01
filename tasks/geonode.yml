@@ -49,6 +49,9 @@
 - name: checkout latest web app code
   git: repo={{code_repository}} version={{app_name}} dest={{app_code_dir}}/{{app_name}}
 
+- name: ensure manage.py has executable permission
+  file: path={{ app_code_dir}}/{{app_name}}/manage.py mode="u+x"
+
 - name: copy the local_settings.py file in place
   template: src=local_settings.py.j2 dest={{ app_code_dir}}/{{app_name}}/{{ app_name}}/local_settings.py
 
@@ -89,7 +92,7 @@
   file: path=/var/www/{{app_name}}/uploaded/thumbs/ state=directory mode=0777 owner=www-data group=www-data
   sudo: yes
 
-- name: rename the vassals-default.ini file to the app name 
+- name: rename the vassals-default.ini file to the app name
   file: src=/etc/uwsgi/vassals-default.skel dest=/etc/uwsgi/{{app_name}}.ini owner=www-data group=www-data state=link
   sudo: yes
 
@@ -150,11 +153,11 @@
   shell: curl --head --silent http://localhost:8080/geoserver/web/
   register: result
   until: result.stdout.find('200 OK') != -1
-  retries: 5 
+  retries: 5
   delay: 60
 
 - name: Copy create_db_store script in place
   template: src=create_db_store.py.j2 dest={{ app_code_dir}}/{{app_name}}/create_db_store.py
 
 - name: create the db datastore in geoserver
-  command: "{{virtualenv_dir}}/{{app_name}}/bin/python {{ app_code_dir}}/{{app_name}}/create_db_store.py" 
+  command: "{{virtualenv_dir}}/{{app_name}}/bin/python {{ app_code_dir}}/{{app_name}}/create_db_store.py"
